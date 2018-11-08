@@ -1,45 +1,45 @@
 import React from "react";
 import PersonInput from "./PersonInput";
+import uuid from "uuid/v4";
 
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      people: ["foo"]
+      people: [{ key: uuid(), name: "foo" }]
     };
     this.inputRef = React.createRef();
-    this.addPersonHandler = this.addPersonHandler.bind(this);
-    this.changePersonHandler = this.addPerson.bind(this);
+    this.addPerson = this.addPerson.bind(this);
+    this.editPerson = this.editPerson.bind(this);
+    this.deletePerson = this.deletePerson.bind(this);
   }
 
-  addPersonHandler(personName) {
+  addPerson(personName) {
     this.setState(state => ({
-      people: [...state.people, personName]
+      people: [...state.people, { key: uuid(), name: personName }]
     }));
     this.inputRef.current.clearName();
     this.inputRef.current.focus();
   }
 
-  addPerson(oldPersonName) {
+  editPerson(key) {
     return newPersonName => {
       this.inputRef.current.focus();
       this.setState(state => ({
         people: state.people.map(
-          existingPersonName =>
-            oldPersonName === existingPersonName
-              ? newPersonName
-              : existingPersonName
+          existingEntry =>
+            existingEntry.key === key
+              ? { key, name: newPersonName }
+              : existingEntry
         )
       }));
     };
   }
 
-  deletePerson(personToDelete) {
+  deletePerson(keyToDelete) {
     return () => {
       this.setState(state => ({
-        people: state.people.filter(
-          existingPersonName => existingPersonName !== personToDelete
-        )
+        people: state.people.filter(({ key }) => key !== keyToDelete)
       }));
       this.inputRef.current.focus();
     };
@@ -48,18 +48,15 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        {this.state.people.map(person => (
+        {this.state.people.map(({ key, name }) => (
           <PersonInput
-            key={person}
-            name={person}
-            personNameSubmitted={this.addPerson(person)}
-            deleteHandler={this.deletePerson(person)}
+            key={key}
+            name={name}
+            personNameSubmitted={this.editPerson(key)}
+            deleteHandler={this.deletePerson(key)}
           />
         ))}
-        <PersonInput
-          ref={this.inputRef}
-          personNameSubmitted={this.addPersonHandler}
-        />
+        <PersonInput ref={this.inputRef} personNameSubmitted={this.addPerson} />
       </div>
     );
   }

@@ -4,7 +4,6 @@ class PersonInput extends React.Component {
   constructor() {
     super();
 
-    this.state = { name: "" };
     this.inputRef = React.createRef();
     this.submitHandler = this.submitHandler.bind(this);
     this.buttonClickHandler = this.buttonClickHandler.bind(this);
@@ -17,7 +16,11 @@ class PersonInput extends React.Component {
   /** @param {KeyboardEvent} e   */
   submitHandler(e) {
     e.preventDefault();
-    this.props.personNameSubmitted(this.inputRef.current.value);
+    const trimmedValue = this.inputRef.current.value.trim();
+    if (trimmedValue) {
+      this.inputRef.current.value = trimmedValue;
+      this.props.personNameSubmitted(trimmedValue);
+    }
   }
 
   clearName() {
@@ -39,7 +42,9 @@ class PersonInput extends React.Component {
         <form onSubmit={this.submitHandler}>
           <input ref={this.inputRef} />
           {this.props.deleteHandler ? (
-            <button onClick={this.buttonClickHandler}>x</button>
+            <button type="button" onClick={this.buttonClickHandler}>
+              x
+            </button>
           ) : null}
         </form>
       </div>
