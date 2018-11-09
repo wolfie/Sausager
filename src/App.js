@@ -2,16 +2,20 @@ import React from "react";
 import PersonInput from "./PersonInput";
 import uuid from "uuid/v4";
 
+const randomFromArray = a => a[Math.floor(Math.random() * a.length)];
+
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      people: [{ key: uuid(), name: "foo" }]
+      people: [{ key: uuid(), name: "foo" }],
+      randomPerson: null
     };
     this.inputRef = React.createRef();
     this.addPerson = this.addPerson.bind(this);
     this.editPerson = this.editPerson.bind(this);
     this.deletePerson = this.deletePerson.bind(this);
+    this.selectRandomPerson = this.selectRandomPerson.bind(this);
   }
 
   addPerson(personName) {
@@ -45,8 +49,14 @@ class App extends React.Component {
     };
   }
 
+  selectRandomPerson() {
+    this.setState(state => ({
+      randomPerson: randomFromArray(state.people).name
+    }));
+  }
+
   render() {
-    return (
+    const PersonInputArea = () => (
       <div>
         {this.state.people.map(({ key, name }) => (
           <PersonInput
@@ -57,7 +67,14 @@ class App extends React.Component {
           />
         ))}
         <PersonInput ref={this.inputRef} personNameSubmitted={this.addPerson} />
+        <button onClick={this.selectRandomPerson}>Throw the sausage</button>
       </div>
+    );
+
+    return !this.state.randomPerson ? (
+      <PersonInputArea />
+    ) : (
+      this.state.randomPerson
     );
   }
 }
