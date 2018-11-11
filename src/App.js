@@ -4,11 +4,19 @@ import uuid from "uuid/v4";
 
 const randomFromArray = a => a[Math.floor(Math.random() * a.length)];
 
+const style = {
+  margin: "0 auto",
+  marginTop: "100px",
+  width: "400px",
+  textAlign: "center",
+  fontFamily: "sans-serif"
+};
+
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      people: [{ key: uuid(), name: "foo" }],
+      people: [],
       randomPerson: null
     };
     this.inputRef = React.createRef();
@@ -22,8 +30,11 @@ class App extends React.Component {
     this.setState(state => ({
       people: [...state.people, { key: uuid(), name: personName }]
     }));
-    this.inputRef.current.clearName();
-    this.inputRef.current.focus();
+
+    setTimeout(() => {
+      this.inputRef.current.clearName();
+      this.inputRef.current.focus();
+    }, 0);
   }
 
   editPerson(key) {
@@ -71,10 +82,15 @@ class App extends React.Component {
       </div>
     );
 
-    return !this.state.randomPerson ? (
-      <PersonInputArea />
-    ) : (
-      this.state.randomPerson
+    return (
+      <div style={style}>
+        <h1>Sausager</h1>
+        {!this.state.randomPerson ? (
+          <PersonInputArea />
+        ) : (
+          this.state.randomPerson
+        )}
+      </div>
     );
   }
 }

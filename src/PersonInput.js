@@ -1,4 +1,22 @@
 import React from "react";
+import sausageImg from "./images/sausage.png";
+
+const sausageContainerStyle = {
+  backgroundImage: `url('${sausageImg}')`,
+  backgroundSize: "100%",
+  width: "300px",
+  height: "85px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  margin: "0 auto"
+};
+
+const inputStyle = {
+  background: "rgba(255,255,255,0.5)",
+  border: "2px solid black",
+  borderRadius: "4px"
+};
 
 class PersonInput extends React.Component {
   constructor() {
@@ -38,9 +56,9 @@ class PersonInput extends React.Component {
 
   render() {
     return (
-      <div>
+      <div style={sausageContainerStyle}>
         <form onSubmit={this.submitHandler}>
-          <input ref={this.inputRef} />
+          <input ref={this.inputRef} style={inputStyle} />
           {this.props.deleteHandler ? (
             <button type="button" onClick={this.buttonClickHandler}>
               x
