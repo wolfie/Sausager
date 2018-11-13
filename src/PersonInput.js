@@ -45,10 +45,6 @@ class PersonInput extends React.Component {
     this.inputRef.current.value = "";
   }
 
-  focus() {
-    this.inputRef.current.focus();
-  }
-
   buttonClickHandler(e) {
     e.preventDefault();
     this.props.deleteHandler();

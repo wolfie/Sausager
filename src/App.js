@@ -1,5 +1,5 @@
 import React from "react";
-import PersonInput from "./PersonInput";
+import PersonInputArea from "./PersonInputArea";
 import uuid from "uuid/v4";
 
 const randomFromArray = a => a[Math.floor(Math.random() * a.length)];
@@ -19,7 +19,7 @@ class App extends React.Component {
       people: [],
       randomPerson: null
     };
-    this.inputRef = React.createRef();
+
     this.addPerson = this.addPerson.bind(this);
     this.editPerson = this.editPerson.bind(this);
     this.deletePerson = this.deletePerson.bind(this);
@@ -30,16 +30,10 @@ class App extends React.Component {
     this.setState(state => ({
       people: [...state.people, { key: uuid(), name: personName }]
     }));
-
-    setTimeout(() => {
-      this.inputRef.current.clearName();
-      this.inputRef.current.focus();
-    }, 0);
   }
 
   editPerson(key) {
     return newPersonName => {
-      this.inputRef.current.focus();
       this.setState(state => ({
         people: state.people.map(
           existingEntry =>
@@ -67,26 +61,19 @@ class App extends React.Component {
   }
 
   render() {
-    const PersonInputArea = () => (
-      <div>
-        {this.state.people.map(({ key, name }) => (
-          <PersonInput
-            key={key}
-            name={name}
-            personNameSubmitted={this.editPerson(key)}
-            deleteHandler={this.deletePerson(key)}
-          />
-        ))}
-        <PersonInput ref={this.inputRef} personNameSubmitted={this.addPerson} />
-        <button onClick={this.selectRandomPerson}>Throw the sausage</button>
-      </div>
-    );
+    const piaProps = {
+      people: this.state.people,
+      editPerson: this.editPerson,
+      deletePerson: this.deletePerson,
+      addPerson: this.addPerson,
+      selectRandomPerson: this.selectRandomPerson
+    };
 
     return (
       <div style={style}>
         <h1>Sausager</h1>
         {!this.state.randomPerson ? (
-          <PersonInputArea />
+          <PersonInputArea {...piaProps} />
         ) : (
           this.state.randomPerson
         )}
